@@ -31,8 +31,8 @@ public class NotesListActivity extends AppCompatActivity {
             }
         });
         sqliteHelper=new SqliteHelper(this);
-        Cursor cursor= sqliteHelper.retriveAllNotesCursor();
-        CursorAdapter cursorAdapter=new NotesListAdapter(this,cursor);
+        final Cursor cursor= sqliteHelper.retriveAllNotesCursor();
+        final CursorAdapter cursorAdapter=new NotesListAdapter(this,cursor);
         listView.setAdapter(cursorAdapter);
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -41,6 +41,17 @@ public class NotesListActivity extends AppCompatActivity {
 
                 deleteNote();
                 return true;
+            }
+        });
+
+        //
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(getApplicationContext(), ListEditActivity.class);
+                intent.putExtra("isUpdate", true);
+                intent.putExtra("id", cursorAdapter.getItemId(i));//.get(position).get(KEY_ID))
+                startActivity(intent);
             }
         });
     }
@@ -69,4 +80,5 @@ public class NotesListActivity extends AppCompatActivity {
                     }
                 }).show();
     }
+
 }
